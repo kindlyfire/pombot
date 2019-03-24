@@ -1,0 +1,18 @@
+{
+  "name": "pombot",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tijl Van den Brugghen <me@tijlvdb.me> (https://tijlvdb.me)",
+  "license": "ISC",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "chalk": "^2.4.2",
+    "discord.js": "^11.4.2",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.1.0"
+  }
+}
