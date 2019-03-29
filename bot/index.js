@@ -3,8 +3,10 @@
 //
 
 const Discord = require('discord.js')
+const globby = require('globby')
+const path = require('path')
 
-const CycleManager = require('./PomManager2')
+const CycleManager = require('./PomManager')
 
 const Bot = {
     // Configuration file
@@ -16,7 +18,8 @@ const Bot = {
     // Pomodoro channel manager
     pomManager: null,
 
-    commandMap: new Discord.Collection(),
+    rootCommands: new Discord.Collection(),
+    commands: new Discord.Collection(),
 
     async run() {
         global.BOT = () => this
@@ -27,11 +30,6 @@ const Bot = {
 
         this.pomManager = new CycleManager(CONFIG().presence.pomChannelId)
         this.pomManager.run()
-
-        this.commandMap.set(CONFIG().commands.raid, `raid`)
-
-        // Load command handlers
-        // this.handlers = require('./handlers')(this)
 
         this.client.on('message', (...a) => this.handleMessage(...a))
 
@@ -50,6 +48,8 @@ const Bot = {
                 })
             }
         }
+
+        this.loadCommands()
     },
 
     createClient() {
@@ -73,7 +73,26 @@ const Bot = {
         })
     },
 
-    handleMessage(message) {
+    async loadCommands() {
+        let files = await globby(path.join(__dirname, 'commands', '**.js'))
+
+        for (let file of files) {
+            let mod = require(file)
+
+            try {
+                mod(this)
+            } catch (e) {
+                LOGGER().error(
+                    { error: e },
+                    `Could not load command in file ${file.slice(
+                        __dirname.length + '/commands/'.length
+                    )}`
+                )
+            }
+        }
+    },
+
+    async handleMessage(message) {
         if (
             message.author.bot ||
             message.guild.id !== this.config.presence.serverId
@@ -83,14 +102,16 @@ const Bot = {
 
         let content = message.content.trim()
 
-        if (this.commandMap.has(content)) {
-            content = CONFIG().commands.prefix + this.commandMap.get(content)
-        }
-
         // Prefix should be checked here
         let prefix = CONFIG().commands.prefix
 
-        if (content !== prefix.trim() && !content.startsWith(prefix)) {
+        let parts = content.split(' ')
+
+        if (
+            content !== prefix.trim() &&
+            !content.startsWith(prefix) &&
+            !this.rootCommands.has(parts[0])
+        ) {
             return
         }
 
@@ -104,23 +125,31 @@ const Bot = {
         }
 
         const command = args.shift().toLowerCase()
+        let handler = null
 
-        console.log(command, args, content)
+        if (this.rootCommands.has(content.split(' ')[0])) {
+            handler = this.rootCommands.get(content.split(' ')[0])
+        } else if (this.commands.has(command)) {
+            handler = this.commands.get(command)
+        }
 
-        // // Slice the 404 handler off
-        // let handlers = this.handlers.slice(1)
-
-        // for (let h of handlers) {
-        //     for (let c of h.commands) {
-        //         if (message.content.startsWith(c)) {
-        //             h.handler(message)
-        //             return
-        //         }
-        //     }
-        // }
-
-        // 404 message handler
-        // this.handlers[0].handler(message)
+        if (handler) {
+            try {
+                await handler({
+                    message,
+                    content,
+                    args,
+                    command,
+                    channel: message.channel
+                })
+            } catch (e) {
+                LOGGER().error(
+                    { error: e },
+                    'Error during execution of command handler'
+                )
+                console.log(e)
+            }
+        }
     }
 }
 

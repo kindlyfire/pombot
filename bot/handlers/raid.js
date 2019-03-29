@@ -4,7 +4,6 @@
 
 const Discord = require('discord.js')
 const Bot = require('../index')
-const Pom = require('../../pom')
 const ReactionButton = require('../../utils/ReactionButton')
 
 let reactionButton

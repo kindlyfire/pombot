@@ -12,6 +12,7 @@
     "bunyan": "^1.8.12",
     "chalk": "^2.4.2",
     "discord.js": "^11.4.2",
+    "globby": "^9.1.0",
     "mysql2": "^1.6.5",
     "sequelize": "^5.1.0"
   }
