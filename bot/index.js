@@ -59,6 +59,11 @@ const Bot = {
 
         this.client.on('error', (e) => {
             LOGGER().warn({ error: e }, 'Client error')
+
+            if (e.code === 'EHOSTUNREACH' || e.code === 'EAI_AGAIN') {
+                // Exit the program to allow it to be rebooted by the supervisor
+                setTimeout(() => process.exit(1), 250)
+            }
         })
 
         return new Promise((resolve, reject) => {
