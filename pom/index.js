@@ -66,10 +66,8 @@ const Pom = {
 
         await pom.addProfile(profile, {
             through: {
-                joinTime:
-                    pomInfo.raw.timeLeft > 20 * 60
-                        ? 0
-                        : 25 * 60 - pomInfo.raw.timeLeft
+                // Round it up
+                timeSpent: Math.ceil(pomInfo.raw.timeLeft / 60) * 60
             }
         })
 
