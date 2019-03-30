@@ -48,6 +48,26 @@ module.exports = class CycleManager {
                     pom.running = true
                     pom.startedAt = new Date()
                     await pom.save()
+
+                    // Send pom started message
+                    let channels = CONFIG().presence.pomDoneChannels
+                    let mentions = profiles
+                        .map((p) => `<@${p.userId}>`)
+                        .join(' ')
+                    let message = `⚔ **A new round has started ! Get to work !** ಠ_ಠ (ping ${mentions})`
+
+                    for (let c of channels) {
+                        let channel = BOT().client.channels.get(c)
+
+                        if (channel) {
+                            channel.send(message).catch((e) => {
+                                LOGGER().warn(
+                                    { error: e },
+                                    'Unable to send pom started message'
+                                )
+                            })
+                        }
+                    }
                 }
             }
 
