@@ -25,7 +25,7 @@ module.exports = async (config) => {
                 min: 1
             },
 
-            logging: true
+            logging: false
         }
     )
 
