@@ -6,6 +6,7 @@ const autoloadModels = [
     'profile-poms',
     'break',
     'profile-breaks',
+    'counter',
     '_relations'
 ]
 const models = {}
@@ -24,7 +25,7 @@ module.exports = async (config) => {
                 min: 1
             },
 
-            logging: false
+            logging: true
         }
     )
 

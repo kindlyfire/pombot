@@ -56,6 +56,27 @@ module.exports = {
         return str.trim()
     },
 
+    formatPosition(n) {
+        let map = {
+            0: 'th',
+            1: 'st',
+            2: 'nd',
+            3: 'rd',
+            4: 'th',
+            5: 'th',
+            6: 'th',
+            7: 'th',
+            8: 'th',
+            9: 'th'
+        }
+
+        if (n >= 10 && n <= 20) {
+            return `${n}th`
+        }
+
+        return `${n}${map[n % 10]}`
+    },
+
     timeoutAsync(ms, f) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
