@@ -71,7 +71,7 @@ module.exports = (bot) => {
                 `All-time pomodoro leaderboard.\n\n` +
                     (profiles.length > 0
                         ? profiles
-                              .slice(page * 10, 10)
+                              .slice(page * 10, page * 10 + 10)
                               .map(
                                   (p, i) =>
                                       `\`${i + 1}\`. <@${
