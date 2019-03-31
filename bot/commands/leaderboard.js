@@ -74,7 +74,7 @@ module.exports = (bot) => {
                               .slice(page * 10, page * 10 + 10)
                               .map(
                                   (p, i) =>
-                                      `\`${i + 1}\`. <@${
+                                      `\`${page * 10 + i + 1}\`. <@${
                                           p.userId
                                       }>: **${utils.formatSeconds(
                                           p.timeInPoms
