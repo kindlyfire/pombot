@@ -49,7 +49,7 @@ module.exports = {
             str += ` ${m}m`
         }
 
-        if (s > 0) {
+        if (s > 0 || str === '') {
             str += ` ${s}s`
         }
 
