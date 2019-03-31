@@ -39,7 +39,35 @@ module.exports = (bot) => {
             )
         }
 
-        let counter = await getCounter(counterName)
+        let counter
+
+        let midnight = new Date()
+
+        midnight.setUTCHours(0)
+        midnight.setUTCMinutes(0)
+        midnight.setUTCSeconds(0)
+
+        if (counterName === 'today') {
+            counter = {
+                description:
+                    'Leaderboard for all raids started after midnight UTC.',
+                startedAt: midnight
+            }
+        } else if (counterName === 'week') {
+            midnight.setUTCDate(
+                midnight.getUTCDate() - ((midnight.getUTCDay() + 6) % 7)
+            )
+
+            console.log(midnight)
+
+            counter = {
+                description:
+                    'Leaderboard for all raids started after Monday UTC.',
+                startedAt: midnight
+            }
+        } else {
+            counter = await getCounter(counterName)
+        }
 
         if (!counter) {
             return channel.send(
@@ -68,7 +96,7 @@ module.exports = (bot) => {
             .setAuthor(`🍅 Raid Leaderboard`)
             .setColor(0xe55b40)
             .setDescription(
-                `All-time pomodoro leaderboard.\n\n` +
+                `${counter.description}\n\n` +
                     (profiles.length > 0
                         ? profiles
                               .slice(page * 10, page * 10 + 10)
