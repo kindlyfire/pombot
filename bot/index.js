@@ -133,6 +133,21 @@ const Bot = {
             handler = this.commands.get(command)
         }
 
+        let member
+        let isAdmin = false
+
+        if (message.guild) {
+            member = message.guild.member(message.author)
+
+            if (
+                CONFIG().permissions.admin.filter((roleId) =>
+                    member.roles.has(roleId)
+                ).length !== 0
+            ) {
+                isAdmin = true
+            }
+        }
+
         if (handler) {
             try {
                 await handler({
@@ -140,7 +155,9 @@ const Bot = {
                     content,
                     args,
                     command,
-                    channel: message.channel
+                    channel: message.channel,
+                    member,
+                    isAdmin
                 })
             } catch (e) {
                 LOGGER().error(

@@ -36,6 +36,9 @@ module.exports = class PomCycle extends EventEmitter {
         // Setup logger
         this.log = LOGGER().child({ component: 'PomCycle' })
 
+        // Function to run on finish
+        this._finish = null
+
         // Startup program
         this.start()
     }
@@ -67,24 +70,18 @@ module.exports = class PomCycle extends EventEmitter {
         // Clear any previous timings
         this.tiGroup.clearAll()
 
-        const finish = async () => {
+        this._finish = async () => {
             this.log.debug('Cycle finished')
+
+            this.clearListeners()
+            this._finish = null
 
             this.pom.finished = true
             this.pom.running = false
             await this.pom.save()
 
-            this.clearListeners()
-
             // Update information card
             let info = await this.getInformation()
-
-            // this.display.updateFinished(info).catch((e) => {
-            //     this.log.error(
-            //         { error: e },
-            //         'Error during update of Cycle display'
-            //     )
-            // })
 
             // Delete pom message
             if (this.message) {
@@ -147,7 +144,7 @@ module.exports = class PomCycle extends EventEmitter {
             if (info.raw.timeLeft * 1000 > timeIncrements + 1500) {
                 this.tiGroup.setTimeout(update, timeIncrements)
             } else {
-                this.tiGroup.setTimeout(finish, info.raw.timeLeft * 1000)
+                this.tiGroup.setTimeout(this._finish, info.raw.timeLeft * 1000)
             }
         }
 

@@ -34,6 +34,9 @@ module.exports = class BreakCycle extends EventEmitter {
         // Child logger
         this.log = LOGGER().child({ component: 'BreakCycle' })
 
+        // Function to call when done
+        this._finish = null
+
         // Startup
         this.start()
     }
@@ -70,8 +73,9 @@ module.exports = class BreakCycle extends EventEmitter {
         // Clear any previous timings
         this.tiGroup.clearAll()
 
-        const finish = async () => {
+        this._finish = async () => {
             this.log.debug(`BreakCycle[finish]`)
+            this._finish = null
 
             this.brk.running = false
             this.brk.finished = true
@@ -109,13 +113,21 @@ module.exports = class BreakCycle extends EventEmitter {
             if (info.timeLeft > timeIncrement / 1000 + 5) {
                 this.tiGroup.setTimeout(update, timeIncrement)
             } else {
-                this.tiGroup.setTimeout(finish, info.timeLeft * 1000)
+                this.tiGroup.setTimeout(this._finish, info.timeLeft * 1000)
             }
         }
 
         update()
 
         this.log.info('BreakCycle[started]')
+    }
+
+    async skip() {
+        this.tiGroup.clearAll()
+
+        if (this._finish) {
+            return this._finish()
+        }
     }
 
     // Create buttons for join/leave to pom

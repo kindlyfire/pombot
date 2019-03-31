@@ -7,6 +7,7 @@
 const Pom = require('../../pom')
 const PomCycle = require('./PomCycle')
 const BreakCycle = require('./BreakCycle')
+const Op = require('sequelize').Op
 
 module.exports = class CycleManager {
     constructor(channelId) {
@@ -37,6 +38,64 @@ module.exports = class CycleManager {
                 brk.running = true
                 brk.startedAt = new Date()
                 await brk.save()
+
+                // Count the number of poms that the user finished
+                // If it is equal to 5, send a message
+                let profiles = await pom.getProfiles()
+
+                let today = new Date()
+                today.setUTCHours(0)
+                today.setUTCMinutes(0)
+                today.setUTCSeconds(0)
+
+                let res = await Promise.all(
+                    profiles.map(async (p) => {
+                        return {
+                            profile: p,
+                            poms: await p.getPoms({
+                                where: {
+                                    createdAt: {
+                                        [Op.gte]: today
+                                    }
+                                }
+                            })
+                        }
+                    })
+                )
+
+                res = res.filter((r) => r.poms.length === 4)
+
+                if (res.length > 0) {
+                    let mentions = res.map((r) => `<@${r.profile.userId}>`)
+                    let msg = '🔥 '
+
+                    if (mentions > 1) {
+                        msg += `${mentions.slice(0, -1).join(', ')} and ${
+                            mentions[mentions.length]
+                        }`
+                    } else {
+                        msg += mentions[0]
+                    }
+
+                    msg +=
+                        (mentions.length === 1 ? ' is' : ' are') +
+                        ` on a 5-pom streak! We can feel that determination there 💪`
+
+                    let channels = CONFIG().presence.pomDoneChannels
+
+                    for (let c of channels) {
+                        let channel = BOT().client.channels.get(c)
+
+                        if (channel) {
+                            channel.send(msg).catch((e) => {
+                                LOGGER().warn(
+                                    { error: e },
+                                    'Unable to send pom started message'
+                                )
+                            })
+                        }
+                    }
+                }
             } else if (cycle.getType() === 'break') {
                 // Start pom if someone pre-joined during break
                 let profiles = await brk.getProfiles()
@@ -54,7 +113,7 @@ module.exports = class CycleManager {
                     let mentions = profiles
                         .map((p) => `<@${p.userId}>`)
                         .join(' ')
-                    let message = `⚔ **A new round has started ! Get to work !** ಠ_ಠ (ping ${mentions})`
+                    let message = `⚔ **A new round has started! Get to work** ಠ_ಠ (ping ${mentions})`
 
                     for (let c of channels) {
                         let channel = BOT().client.channels.get(c)
