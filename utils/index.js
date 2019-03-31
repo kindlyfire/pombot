@@ -17,19 +17,6 @@ module.exports = {
             minute: 'numeric',
             hour12: true
         })
-
-        // Old code
-        let h = d.getHours()
-
-        let str = `${h}:`
-
-        if (d.getMinutes() < 10) {
-            str += '0'
-        }
-
-        str += d.getMinutes()
-
-        return str
     },
 
     formatSeconds(s) {
@@ -61,16 +48,10 @@ module.exports = {
             0: 'th',
             1: 'st',
             2: 'nd',
-            3: 'rd',
-            4: 'th',
-            5: 'th',
-            6: 'th',
-            7: 'th',
-            8: 'th',
-            9: 'th'
+            3: 'rd'
         }
 
-        if (n >= 10 && n <= 20) {
+        if ((n >= 10 && n <= 20) || n % 10 > 3) {
             return `${n}th`
         }
 
