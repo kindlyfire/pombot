@@ -103,7 +103,11 @@ module.exports = class CycleManager {
                 this.sendStartedMessage(profiles)
 
                 if (profiles.length > 0) {
-                    await pom.setProfiles(profiles)
+                    await pom.setProfiles(profiles, {
+                        through: {
+                            timeSpent: 25 * 60
+                        }
+                    })
                     pom.running = true
                     pom.startedAt = new Date()
                     await pom.save()
@@ -113,7 +117,7 @@ module.exports = class CycleManager {
                     let mentions = profiles
                         .map((p) => `<@${p.userId}>`)
                         .join(' ')
-                    let message = `⚔ **A new round has started! Get to work** ಠ_ಠ (ping ${mentions})`
+                    let message = `⚔ **A new round has started!** Time to get to work ಠ_ಠ (ping ${mentions})`
 
                     for (let c of channels) {
                         let channel = BOT().client.channels.get(c)
