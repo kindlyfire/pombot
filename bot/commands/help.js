@@ -8,7 +8,7 @@ module.exports = (bot) => {
     bot.commands.set('help', async ({ channel }) => {
         let embed = new Discord.RichEmbed()
             .setAuthor(`🍅 Raid Leaderboard`)
-            .setColor(0xe55b40)
+            .setColor(0xfea3aa)
             .setDescription(
                 `Every commands starts with \`${CONFIG().commands.prefix}\`.`
             )

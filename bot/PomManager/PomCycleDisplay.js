@@ -34,11 +34,12 @@ const embeds = {
 
         return new Discord.RichEmbed()
             .setAuthor(embedConfig.name, embedConfig.icon, embedConfig.url)
-            .setColor(0xe55b40)
+            .setColor(0xdf3232)
     },
 
     NoPom() {
         return this.DefaultEmbed()
+            .setColor(0xb2cefe)
             .setDescription(
                 'No pomodoro timer is running at the moment. You may start one at any time by pressing the blue circle button.'
             )

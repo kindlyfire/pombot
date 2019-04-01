@@ -94,7 +94,7 @@ module.exports = (bot) => {
 
         let embed = new Discord.RichEmbed()
             .setAuthor(`🍅 Raid Leaderboard`)
-            .setColor(0xe55b40)
+            .setColor(0xfea3aa)
             .setDescription(
                 `${counter.description}\n\n` +
                     (profiles.length > 0
@@ -118,9 +118,11 @@ module.exports = (bot) => {
         if (profiles.length > 0) {
             embed.setFooter(
                 `Page ${page + 1}/${Math.ceil(profiles.length / 10) ||
-                    1} • Your leaderboard rank: ${utils.formatPosition(
-                    userPosition + 1
-                )}`
+                    1} • Your leaderboard rank: ${
+                    userPosition !== -1
+                        ? utils.formatPosition(userPosition + 1)
+                        : 'unranked'
+                }`
             )
         }
 

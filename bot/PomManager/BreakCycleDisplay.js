@@ -24,7 +24,7 @@ const embeds = {
 
         return new Discord.RichEmbed()
             .setAuthor(embedConfig.name, embedConfig.icon, embedConfig.url)
-            .setColor(0xe55b40)
+            .setColor(0xbaed91)
     },
 
     Running(info) {
