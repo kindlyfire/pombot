@@ -63,7 +63,7 @@ module.exports = class CycleManager {
                     })
                 )
 
-                res = res.filter((r) => r.poms.length === 4)
+                res = res.filter((r) => r.poms.length === 5)
 
                 if (res.length > 0) {
                     let mentions = res.map((r) => `<@${r.profile.userId}>`)
@@ -79,7 +79,7 @@ module.exports = class CycleManager {
 
                     msg +=
                         (mentions.length === 1 ? ' is' : ' are') +
-                        ` on a 5-pom streak! We can feel that determination there 💪`
+                        ` on a 5-pom streak today! We can feel that determination there 💪`
 
                     let channels = CONFIG().presence.pomDoneChannels
 
