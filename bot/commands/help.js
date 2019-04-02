@@ -15,7 +15,7 @@ module.exports = (bot) => {
             .addField('!rb', `Show information about what this bot does.`)
             .addField('!rb help', `Show this information message.`)
             .addField(
-                '!rb leaderboard [counter?] [page?]',
+                '!leaderboard [counter?] [page?]',
                 `Show a leaderboard. Special leaderboards can be viewed like \`today\` and \`week\`. Defaults to \`!rb leaderboard default 1\``
             )
 
