@@ -126,8 +126,9 @@ module.exports = (bot) => {
         channel.send({ embed })
     }
 
-    bot.commands.set('lb', handler)
-    bot.commands.set('leaderboard', handler)
+    // bot.commands.set('lb', handler)
+    // bot.commands.set('leaderboard', handler)
+    bot.rootCommands.set('!leaderboard', handler)
 }
 
 const getCounter = async (name) => {
