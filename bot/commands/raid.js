@@ -33,7 +33,7 @@ module.exports = (bot) => {
         lastMessage = msg
 
         setTimeout(() => {
-            msg.delete().catch((e) => {
+            message.delete().catch((e) => {
                 LOGGER().warn({ error: e }, 'Failed to delete raid message')
             })
             reactionButton.off()
