@@ -49,6 +49,9 @@ const Bot = {
             }
         }
 
+        // let c = CLIENT().channels.get('382364344731828226')
+        // c.send('<:nou:538700893982425088> <:nou:538700893982425088> <:nou:538700893982425088>')
+
         this.loadCommands()
     },
 

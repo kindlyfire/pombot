@@ -28,14 +28,14 @@ module.exports = (bot) => {
                 return channel.send(
                     `❌ Wrong arguments. Usage: \`${
                         CONFIG().commands.prefix
-                    }leaderboard <counter?> <page>\``
+                    }leaderboard <counter?> <page?>\``
                 )
             }
         } else if (args.length > 2) {
             return channel.send(
                 `❌ Too many arguments. Usage: \`${
                     CONFIG().commands.prefix
-                }leaderboard <counter?> <page>\``
+                }leaderboard <counter?> <page?>\``
             )
         }
 
@@ -47,22 +47,19 @@ module.exports = (bot) => {
         midnight.setUTCMinutes(0)
         midnight.setUTCSeconds(0)
 
-        if (counterName === 'today') {
+        if (counterName === 'daily') {
             counter = {
                 description:
                     'Leaderboard for all raids started after midnight UTC.',
                 startedAt: midnight
             }
-        } else if (counterName === 'week') {
-            midnight.setUTCDate(
-                midnight.getUTCDate() - ((midnight.getUTCDay() + 6) % 7)
-            )
-
-            console.log(midnight)
+        } else if (counterName === 'weekly' || counterName === 'default') {
+            midnight.setUTCHours(17) // 5 pm
+            midnight.setUTCDate(midnight.getUTCDate() - midnight.getUTCDay())
 
             counter = {
                 description:
-                    'Leaderboard for all raids started after Monday UTC.',
+                    'Weekly raid leaderboard which resets each Sunday at 5pm UTC.',
                 startedAt: midnight
             }
         } else {
