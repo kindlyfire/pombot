@@ -29,8 +29,15 @@ module.exports = (bot) => {
                     'Failed to delete last raid message'
                 )
             })
-            lastMessage = null
         }
+        lastMessage = msg
+
+        setTimeout(() => {
+            msg.delete().catch((e) => {
+                LOGGER().warn({ error: e }, 'Failed to delete raid message')
+            })
+            reactionButton.off()
+        }, 3000)
 
         let joinMessages = new Discord.Collection()
 
