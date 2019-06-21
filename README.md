@@ -26,4 +26,4 @@ Database models are in the `models/` directory. You could use those and let [Seq
 
 ## Contributing
 
-This project is not actively developed anymore. That said, if you have anything interesting to propose, feel free to reach out to `kindly#0001` on the support server of my Quarko bot ([invite](https://discord.gg/wmA6Bzf)).
+This project is not actively developed anymore. That said, if you have anything interesting to propose, feel free to reach out to `kindly#0001` on the support server of my Quarko bot ([invite](https://discord.gg/f4f9EpY)).
